@@ -8,12 +8,10 @@ from musiclibrary_backend import serializers
 @api_view(['GET', 'POST'])
 
 def musiclibrary_list(request):
-
     if request.method == 'GET':
         musiclibrary_songs = Song.objects.all()
         serializer = SongSerializer(musiclibrary_songs, many=True)
         return Response(serializer.data)
-
     elif request.method == 'POST':
         serializer = SongSerializer(data=request.data)
         if serializer.is_valid() == True:
