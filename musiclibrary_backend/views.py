@@ -22,12 +22,19 @@ def musiclibrary_list(request):
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-@api_view(['GET'])
+@api_view(['GET', 'PUT'])
 def musiclibrary_detail(request, pk):
-    try:
+    if request.method == 'GET':
+        try:
+            song = Song.objects.get(pk=pk)
+            serializer = SongSerializer(song)
+            return Response(serializer.data)
+        except Song.DoesNotExist:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+    elif request.method =='PUT':
         song = Song.objects.get(pk=pk)
-        serializer = SongSerializer(song);
+        serializer = SongSerializer(song, data=request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
         return Response(serializer.data)
-    except Song.DoesNotExist:
-        return Response(status=status.HTTP_404_NOT_FOUND)
-    return Response(pk)
+   
