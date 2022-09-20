@@ -20,7 +20,7 @@ def musiclibrary_list(request):
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-@api_view(['GET', 'PUT', 'DELETE'])
+@api_view(['GET', 'PUT', 'DELETE', 'PATCH'])
 def musiclibrary_detail(request, pk):
     if request.method == 'GET':
         try:
@@ -39,4 +39,13 @@ def musiclibrary_detail(request, pk):
         song = Song.objects.get(pk=pk)
         song.delete()
         return Response(status=status.HTTP_200_OK)
+    elif request.method == 'PATCH':
+        song = Song.objects.get(pk=pk)
+        song.like += 1
+        serializer = SongSerializer(song, data=request.data, partial = True)
+        serializer.is_valid() == True
+        serializer.save()
+        return Response(serializer.data, status=status.HTTP_202_ACCEPTED)
+       
+
    

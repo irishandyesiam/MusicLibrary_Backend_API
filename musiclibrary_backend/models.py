@@ -6,3 +6,4 @@ class Song(models.Model):
     album = models.CharField(max_length=255)
     release_date = models.DateField(null=True)
     genre = models.CharField(max_length=255)
+    like = models.IntegerField(null=True)
